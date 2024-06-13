@@ -10,7 +10,7 @@ frontend:
     build:
       commands:
         - mkdir ./dist && touch ./dist/index.html
-        - curl -X POST -d {} "https://webhooks.amplify.us-west-2.amazonaws.com/prod/webhooks?id=7906634d-fcf5-4bdf-996c-69d5c4fd2623&token=jjmKYnn22mr8OPyWLCrhJvp6OFZUBr8pzvln0G3zQg&operation=startbuild" -H "Content-Type:application/json"
+        # - curl -X POST -d {} "https://webhooks.amplify.us-west-2.amazonaws.com/prod/webhooks?id=7906634d-fcf5-4bdf-996c-69d5c4fd2623&token=jjmKYnn22mr8OPyWLCrhJvp6OFZUBr8pzvln0G3zQg&operation=startbuild" -H "Content-Type:application/json"
   artifacts:
     baseDirectory: dist
     files:
