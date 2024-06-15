@@ -7,12 +7,46 @@ specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  Todo: a
+  MenuSessionStatus: a.enum([
+    "OPEN",
+    "COMPLETE",
+    "EXPIRED"
+  ]),
+
+  MenuSession: a
     .model({
-      content: a.string(),
-    })
-    .authorization((allow) => [allow.guest()]),
-});
+      url: a.string().required(),
+      userName: a.string().required(),
+      targetDate: a.date().required(),
+      status: a.ref("MenuSessionStatus"),
+      createdOrder: a.hasOne("Order", "sessionId"),
+      categories: a.hasMany("MenuCategory", "sessionId"),
+    }),
+  MenuCategory: a
+    .model({
+      name: a.string().required(),
+      description: a.string(),
+      categoryItems: a.hasMany("CategoryItem", "categoryId"),
+      sessionId: a.id(),
+      menuSession: a.belongsTo("MenuSession", "sessionId"),
+    }),
+  CategoryItem: a
+    .model({
+      name: a.string().required(),
+      description: a.string(),
+      imageLink: a.string(),
+      ingredients: a.string().array(),
+      categoryId: a.id(),
+      menuCategory: a.belongsTo("MenuCategory", "categoryId"),
+    }),
+  Order: a
+    .model({
+      targetDate: a.date().required(),
+      userName: a.string().required(),
+      sessionId: a.id(),
+      menuSession: a.belongsTo("MenuSession", "sessionId"),
+    }),
+}).authorization((allow) => [allow.guest()]);
 
 export type Schema = ClientSchema<typeof schema>;
 
