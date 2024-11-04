@@ -7,12 +7,14 @@ specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
+  // ENUM
   MenuSessionStatus: a.enum([
     "OPEN",
     "COMPLETE",
     "EXPIRED"
   ]),
 
+  // Data Models
   MenuSession: a
     .model({
       url: a.string().required(),
@@ -46,6 +48,32 @@ const schema = a.schema({
       sessionId: a.id(),
       menuSession: a.belongsTo("MenuSession", "sessionId"),
     }),
+
+  // Queries
+  menuSessionById: a
+    .query()
+    .arguments({
+      id: a.string().required()
+    })
+    .returns(a.ref("MenuSession"))
+    .authorization((allow) => [allow.guest()]),
+
+  // Mutations
+  createNewMenuSession: a
+    .mutation()
+    .arguments({
+      userName: a.string().required(),
+      targetDate: a.date().required()
+    })
+    .returns(a.ref("MenuSession"))
+    .authorization((allow) => [allow.guest()]),
+  finalizeMenuSession: a
+    .mutation()
+    .arguments({
+      sessionId: a.string().required()
+    })
+    .returns(a.ref("MenuSession"))
+    .authorization((allow) => [allow.guest()])
 }).authorization((allow) => [allow.guest()]);
 
 export type Schema = ClientSchema<typeof schema>;
